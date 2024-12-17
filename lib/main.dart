@@ -16,24 +16,26 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider.value(value: HomeProvider()),
       ],
-      child: Consumer<HomeProvider>(builder: (context, value, child) {
-        return MaterialApp(
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData.light().copyWith(
-            appBarTheme: const AppBarTheme(color: Color(0xffe9ae1f)),
-          ),
-          darkTheme: ThemeData.dark().copyWith(
-            appBarTheme: const AppBarTheme(color: Color(0xffe9ae1f)),
-          ),
+      child: Consumer<HomeProvider>(
+        builder: (context, value, child) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            // theme: ThemeData.light().copyWith(
+            //   appBarTheme: const AppBarTheme(color: Color(0xffe9ae1f)),
+            // ),
+            // darkTheme: ThemeData.dark().copyWith(
+            //   appBarTheme: const AppBarTheme(color: Color(0xffe9ae1f)),
+            // ),
 
-          // themeMode: (value.isdarkmode)
-          //     ? ThemeMode.dark
-          //     : value.isdarkmode
-          //         ? ThemeMode.dark
-          //         : ThemeMode.light,
-          routes: Routes().allRoutes,
-        );
-      }),
+            // themeMode: (value.isdarkmode)
+            //     ? ThemeMode.dark
+            //     : value.isdarkmode
+            //         ? ThemeMode.dark
+            //         : ThemeMode.light,
+            routes: Routes().allRoutes,
+          );
+        },
+      ),
     );
   }
 }

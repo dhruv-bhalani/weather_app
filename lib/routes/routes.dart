@@ -6,9 +6,9 @@ import 'package:weatherapp/screens/splashscreen/view/splash.dart';
 class Routes {
   Map<String, Widget Function(BuildContext)> get allRoutes {
     return {
-      // '/': (context) => const Splash(),
-      '/': (context) => const Home(),
-      '/detail': (context) => const Detail(),
+      '/': (context) => const Splash(),
+      '/home': (context) => const Home(),
+      '/search': (context) => const Detail(),
     };
   }
 }

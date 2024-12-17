@@ -13,26 +13,39 @@ class _HomeState extends State<Home> {
   late HomeProvider homeProviderR;
   late HomeProvider homeProviderW;
   @override
+  void initState() {
+    context.read<HomeProvider>().getData('surat');
+    super.initState();
+  }
+
+  TextEditingController txtsearch = TextEditingController();
+  @override
   Widget build(BuildContext context) {
     homeProviderW = context.watch<HomeProvider>();
     homeProviderR = context.read<HomeProvider>();
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
-          const Image(
-            image: AssetImage("assets/image/2.png"),
-            fit: BoxFit.cover,
+          SizedBox(
+            height: double.infinity,
+            width: double.infinity,
+            child: Image(
+              image: AssetImage(homeProviderW.getIcon(
+                      homeProviderW.weatherModel?.main.toString() ?? '') ??
+                  'assets/gif/1.gif'),
+              fit: BoxFit.cover,
+            ),
           ),
           Padding(
-            padding:
-                const EdgeInsets.only(top: 50, left: 16, right: 16, bottom: 16),
+            padding: const EdgeInsets.all(16),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                const Center(
+              children: [
+                Center(
                   child: Text(
-                    'Montreal',
-                    style: TextStyle(
+                    '${homeProviderW.weatherModel?.name}',
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
@@ -40,108 +53,240 @@ class _HomeState extends State<Home> {
                   ),
                 ),
                 // const SizedBox(height: 5),
-                const Center(
-                  child: Text(
-                    '19°',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 70,
-                      fontWeight: FontWeight.bold,
+                Column(
+                  children: [
+                    TextField(
+                      cursorColor: Colors.white,
+                      style: const TextStyle(color: Colors.white),
+                      onChanged: (value) {
+                        context.read<HomeProvider>().getData(txtsearch.text);
+                      },
+                      controller: txtsearch,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                        ),
+                        prefixIcon: Icon(
+                          Icons.search,
+                          color: Colors.white,
+                        ),
+                        hintText: 'Search',
+                        labelText: 'City Name',
+                      ),
                     ),
-                  ),
-                ),
-                const SizedBox(height: 4),
-                const Center(
-                  child: Text(
-                    'Mostly Clear',
-                    style: TextStyle(
-                      color: Colors.white70,
-                      fontSize: 18,
+                    Column(
+                      children: [
+                        Center(
+                          child: Text(
+                            '${homeProviderW.weatherModel?.main?.temp?.toInt()}°',
+                            style: const TextStyle(
+                              color: Colors.white70,
+                              fontSize: 60,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: SizedBox(
+                                width: 100,
+                                height: 80,
+                                child: Column(
+                                  children: [
+                                    const Text(
+                                      'Temp',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 5),
+                                    Center(
+                                      child: Text(
+                                        'Max :${homeProviderW.weatherModel?.main?.tempMax?.toInt()}',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 15,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 5),
+                                    Center(
+                                      child: Text(
+                                        'Min :${homeProviderW.weatherModel?.main?.tempMin?.toInt()}',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 15,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.center,
+                              child: SizedBox(
+                                width: 100,
+                                child: Image(
+                                  image: AssetImage(homeProviderW.getImage(
+                                          homeProviderW.weatherModel?.main
+                                                  .toString() ??
+                                              '') ??
+                                      'assets/image/4.png'),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: SizedBox(
+                                width: 100,
+                                height: 80,
+                                child: Column(
+                                  children: [
+                                    const Text(
+                                      'Coord',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 5),
+                                    Center(
+                                      child: Text(
+                                        'Lan :${homeProviderW.weatherModel?.coord?.lat?.toInt()}',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 15,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 5),
+                                    Center(
+                                      child: Text(
+                                        'Lon :${homeProviderW.weatherModel?.coord?.lon?.toInt()}',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 15,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Align(
+                          alignment: Alignment.center,
+                          child: Center(
+                            child: Text(
+                              'Feels like :${homeProviderW.weatherModel?.main?.feelsLike?.toInt()}',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 15,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Center(
+                            child: Text(
+                              'Pressure :${homeProviderW.weatherModel?.main?.pressure?.toInt()}',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 15,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        SizedBox(
+                          width: 100,
+                          height: 100,
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: Column(
+                              children: [
+                                const Text(
+                                  'All',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                const SizedBox(height: 5),
+                                SizedBox(
+                                  width: 100,
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                        'Clouds :${homeProviderW.weatherModel?.clouds?.all?.toInt()}',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 13,
+                                        ),
+                                      ),
+                                      Text(
+                                        'Humidity :${homeProviderW.weatherModel?.main?.humidity?.toInt()}',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 13,
+                                        ),
+                                      ),
+                                      Text(
+                                        'Visibility :${homeProviderW.weatherModel?.visibility?.toInt()}',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 13,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        )
+                      ],
                     ),
-                  ),
-                ),
-                const SizedBox(height: 4),
-                const Center(
-                  child: Text(
-                    'H:24°  L:18°',
-                    style: TextStyle(
-                      color: Colors.white70,
-                      fontSize: 14,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 4),
-                const Image(
-                  image: AssetImage("assets/image/3.png"),
-                  fit: BoxFit.cover,
+                  ],
                 ),
                 const SizedBox(
-                  height: 30,
+                  height: 20,
                 ),
-                const Text(
-                  'Hourly Forecast',
-                  style: TextStyle(
+                Text(
+                  '${homeProviderW.weatherModel?.weather?[0].description}',
+                  style: const TextStyle(
                       color: Colors.white,
                       fontSize: 25,
                       fontWeight: FontWeight.bold),
                 ),
-                Expanded(
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: 6,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Container(
-                          width: 60,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            gradient: LinearGradient(
-                              colors: [
-                                const Color(0xff1C1B33),
-                                Colors.primaries[3],
-                                const Color(0xff1C1B33),
-                              ],
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                            ),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const SizedBox(height: 8),
-                              Text(
-                                '${index == 0 ? "Now" : "${index * 2} AM"}',
-                                style: const TextStyle(color: Colors.white70),
-                              ),
-                              const SizedBox(height: 4),
-                              const Icon(
-                                Icons.cloud,
-                                color: Colors.white,
-                                size: 40,
-                              ),
-                              const Text(
-                                '30%',
-                                style: TextStyle(
-                                  color: Colors.white70,
-                                  fontSize: 12,
-                                ),
-                              ),
-                              const SizedBox(height: 5),
-                              const Text(
-                                '19°',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
+
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: Image(
+                    image: AssetImage(homeProviderW.getcardImage(
+                            homeProviderW.weatherModel?.main.toString() ??
+                                '') ??
+                        'assets/image/sunny.png'),
+                    fit: BoxFit.cover,
                   ),
-                )
+                ),
               ],
             ),
           ),
