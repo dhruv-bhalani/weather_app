@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:weatherapp/screens/detailscreen/view/detail.dart';
+import 'package:weatherapp/screens/bookmarkscreen/view/bookmark.dart';
+import 'package:weatherapp/screens/historyscreen/view/detail.dart';
 import 'package:weatherapp/screens/homescreens/view/home.dart';
 import 'package:weatherapp/screens/splashscreen/view/splash.dart';
 
@@ -8,7 +9,8 @@ class Routes {
     return {
       '/': (context) => const Splash(),
       '/home': (context) => const Home(),
-      '/search': (context) => const Detail(),
+      '/history': (context) => const Detail(),
+      '/bookmark': (context) => const Bookmark(),
     };
   }
 }

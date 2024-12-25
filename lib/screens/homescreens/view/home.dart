@@ -12,6 +12,45 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   late HomeProvider homeProviderR;
   late HomeProvider homeProviderW;
+  void showCity() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          content: Container(
+            height: 100,
+            width: 300,
+            color: Colors.black,
+            child: SearchBar(
+              controller: txtsearch,
+              onSubmitted: (value) {
+                txtsearch.text = value;
+
+                context.read<HomeProvider>().getData(value);
+                ();
+                Navigator.pop(context);
+                txtsearch.clear();
+                context.read<HomeProvider>().setSearch(
+                    context.read<HomeProvider>().getData(value) as String);
+              },
+              hintText: "Search city",
+              padding: const WidgetStatePropertyAll(
+                EdgeInsets.only(left: 20, top: 5),
+              ),
+              hintStyle: const WidgetStatePropertyAll(
+                TextStyle(color: Colors.white),
+              ),
+              textStyle: const WidgetStatePropertyAll(
+                TextStyle(color: Colors.white),
+              ),
+              backgroundColor: const WidgetStatePropertyAll(Colors.transparent),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   void initState() {
     context.read<HomeProvider>().getData('surat');
@@ -23,6 +62,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     homeProviderW = context.watch<HomeProvider>();
     homeProviderR = context.read<HomeProvider>();
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Stack(
@@ -40,26 +80,64 @@ class _HomeState extends State<Home> {
           Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              // mainAxisAlignment: MainAxisAlignment.center,
+
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Center(
-                  child: Text(
-                    '${homeProviderW.weatherModel?.name}',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                const SizedBox(
+                  height: 30,
                 ),
-                // const SizedBox(height: 5),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    InkWell(
+                      onLongPress: () {
+                        Navigator.pushNamed(context, '/bookmark');
+                      },
+                      child: IconButton(
+                        onPressed: () {
+                          homeProviderR.getData(
+                            homeProviderW.bookmarkHistory[0],
+                          );
+                        },
+                        icon: const Icon(
+                          Icons.bookmark_add_outlined,
+                          color: Colors.white,
+                          size: 30,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      '\t\t\t\t${homeProviderW.weatherModel?.name}',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/history');
+                      },
+                      icon:
+                          const Icon(Icons.add, color: Colors.white, size: 30),
+                    ),
+                  ],
+                ),
                 Column(
                   children: [
+                    const SizedBox(
+                      height: 30,
+                    ),
                     TextField(
                       cursorColor: Colors.white,
                       style: const TextStyle(color: Colors.white),
                       onChanged: (value) {
                         context.read<HomeProvider>().getData(txtsearch.text);
+                      },
+                      onSubmitted: (value) {
+                        homeProviderR.searchHistory.insert(0, value);
+                        txtsearch.clear();
                       },
                       controller: txtsearch,
                       decoration: const InputDecoration(
@@ -68,11 +146,14 @@ class _HomeState extends State<Home> {
                         ),
                         prefixIcon: Icon(
                           Icons.search,
-                          color: Colors.white,
+                          color: Colors.black54,
                         ),
-                        hintText: 'Search',
-                        labelText: 'City Name',
+                        hintText: 'City Name',
+                        hintStyle: TextStyle(color: Colors.white),
                       ),
+                    ),
+                    const SizedBox(
+                      height: 10,
                     ),
                     Column(
                       children: [
@@ -276,7 +357,6 @@ class _HomeState extends State<Home> {
                       fontSize: 25,
                       fontWeight: FontWeight.bold),
                 ),
-
                 Align(
                   alignment: Alignment.bottomRight,
                   child: Image(
